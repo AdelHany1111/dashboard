@@ -1,0 +1,26 @@
+{
+  "name": "مركز القيادة | الإمبراطورية",
+  "short_name": "القيادة",
+  "description": "تطبيق مركز القيادة للتحكم في مهام الإمبراطورية وتحليل الأداء",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#0EA5E9",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
