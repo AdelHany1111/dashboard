@@ -418,7 +418,10 @@
         }
         .modal-overlay.active .modal-box { transform: translateY(0); }
 
-        /* تم حذف تكرار كلاسات stat-card لتنظيف الكود وتسريع الأداء */
+        .stat-card { background: var(--bg-surface); border: 1px solid var(--outline-dim); border-radius: var(--r-md); padding: var(--sp-3); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .stat-card.elevated { background: var(--bg-elevated); border: 1.5px solid var(--accent); }
+        .stat-value { font-size: var(--f-headline); font-weight: 600; color: var(--on-surface); line-height: 1; font-family: monospace; }
+        .stat-label { font-size: var(--f-caption); color: var(--on-surface-dim); margin-top: var(--sp-1); }
 
         /* ── Alerts & Insights ── */
         .alert { 
@@ -520,88 +523,6 @@
             background: rgba(14, 165, 233, 0.15); /* إضاءة خلفية للزرار المفعل */
         }
         .nav-item.active span { color: var(--accent); }
-
-        /* ── App Viewer (Iframe Overlay) ── */
-        .app-viewer {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg-base);
-            z-index: 9999; /* عشان تغطي كل حاجة حرفياً */
-            display: flex;
-            flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .app-viewer.active {
-            transform: translateY(0);
-        }
-        .app-viewer-header {
-            height: 60px;
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--outline);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 var(--sp-4);
-            padding-top: env(safe-area-inset-top);
-            box-sizing: content-box;
-        }
-        .app-viewer-title {
-            font-size: var(--f-title);
-            font-weight: var(--fw-headline);
-            color: var(--on-surface);
-        }
-        .app-viewer-close {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: var(--on-surface);
-            width: 40px;
-            height: 40px;
-            border-radius: var(--r-full);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background var(--t-fast), transform var(--t-fast);
-        }
-        .app-viewer-close:active {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(0.9);
-        }
-        .app-viewer-content {
-            flex: 1;
-            position: relative;
-            background: var(--bg-base);
-        }
-        .app-viewer-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            position: relative;
-            z-index: 2;
-            background: transparent;
-        }
-        .app-viewer-loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--sp-3);
-        }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--outline);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -646,21 +567,21 @@
             <!-- شبكة الأزرار -->
             <div class="app-grid">
                 
-                <a href="javascript:void(0)" onclick="openApp('https://adelhany1111.github.io/platform-VIP/', 'أكاديمية الفرم')" class="app-rect">
+                <a href="https://adelhany1111.github.io/platform-VIP/" target="_blank" class="app-rect">
                     <div class="app-rect-icon" style="color: var(--secondary);">
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
                     <h4 class="app-rect-title">أكاديمية الفرم</h4>
                 </a>
 
-                <a href="javascript:void(0)" onclick="openApp('https://adelhany1111.github.io/Gym-tracking/', 'مصنع العضلات')" class="app-rect">
+                <a href="https://adelhany1111.github.io/Gym-tracking/" target="_blank" class="app-rect">
                     <div class="app-rect-icon" style="color: var(--accent);">
                         <i class="fa-solid fa-dumbbell"></i>
                     </div>
                     <h4 class="app-rect-title">مصنع العضلات</h4>
                 </a>
 
-                <a href="javascript:void(0)" onclick="openApp('https://adelhany1111.github.io/Budget-Manager/', 'الخزنة المركزية')" class="app-rect">
+                <a href="https://adelhany1111.github.io/Budget-Manager/" target="_blank" class="app-rect">
                     <div class="app-rect-icon" style="color: var(--success);">
                         <i class="fa-solid fa-money-bill-wave"></i>
                     </div>
@@ -955,44 +876,6 @@
                 
                 insightsContainerEl.appendChild(fragment);
             }
-
-            // --- [ نظام فتح التطبيقات داخل الإمبراطورية ] ---
-            const appViewer = document.getElementById('app-viewer');
-            const appViewerIframe = document.getElementById('app-viewer-iframe');
-            const appViewerTitle = document.getElementById('app-viewer-title');
-
-            function openApp(url, title) {
-                // بنحط الرابط في الـ iframe والاسم فوق
-                appViewerIframe.src = url;
-                appViewerTitle.innerText = title;
-                
-                // بنظهر الشاشة بحركة ناعمة
-                appViewer.classList.add('active');
-            }
-
-            function closeApp() {
-                // بنقفل الشاشة الأول
-                appViewer.classList.remove('active');
-                
-                // بنفضي الـ iframe بعد ما الأنيميشن يخلص عشان نوفر الرامات (Memory Leak Fix)
-                setTimeout(() => {
-                    appViewerIframe.src = 'about:blank';
-                }, 400); 
-            }
-
-            // ==========================================
-            // 🚀 تسجيل الـ Service Worker للـ PWA
-            // ==========================================
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', async () => {
-                    try {
-                        const registration = await navigator.serviceWorker.register('./sw.js');
-                        console.log('✅ السيرفيس وركر شغال زي الفل يا إمبراطور! النطاق:', registration.scope);
-                    } catch (error) {
-                        console.error('❌ في مشكلة في تشغيل السيرفيس وركر:', error);
-                    }
-                });
-            }
         </script>
 
         <!-- شريط التنقل السفلي -->
@@ -1011,27 +894,259 @@
             </div>
         </nav>
 
-        <!-- نافذة عرض التطبيقات الفرعية (Iframe Overlay) -->
-        <div id="app-viewer" class="app-viewer">
-            <div class="app-viewer-header">
-                <span id="app-viewer-title" class="app-viewer-title">التطبيق</span>
-                <!-- زرار رجوع كبير عشان نطبق Fitts's Law للسهولة -->
-                <button onclick="closeApp()" class="app-viewer-close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="app-viewer-content">
-                <!-- اللودر ده هيشتغل لحد ما الـ iframe يحمل -->
-                <div class="app-viewer-loader">
-                    <div class="spinner"></div>
-                    <span style="color: var(--on-surface-dim); font-size: var(--f-caption); font-weight: var(--fw-label);">جاري تحضير الشاشة...</span>
-                </div>
-                <!-- الـ iframe نفسه -->
-                <iframe id="app-viewer-iframe" class="app-viewer-iframe" allow="camera; microphone; geolocation"></iframe>
-            </div>
-        </div>
-
     </div>
 
-    </body>
+    <script>
+        // --- [ الكود الأصلي ] ---
+
+        // ساعة حية وتحية ديناميكية (مُحسنة: تتحدث مع الوقت الفعلي)
+        const clockElement = document.getElementById('live-clock');
+        const greetingElement = document.getElementById('greeting-text');
+        let clockInterval;
+
+        function updateClock() {
+            const now = new Date();
+            let h = now.getHours().toString().padStart(2, '0');
+            let m = now.getMinutes().toString().padStart(2, '0');
+            let s = now.getSeconds().toString().padStart(2, '0');
+            clockElement.innerText = `${h}:${m}:${s}`;
+
+            // تحديث التحية بشكل ديناميكي عشان لو فضل فاتح التطبيق
+            const currentHour = now.getHours();
+            let greeting = "مرحباً يا إمبراطور";
+            if (currentHour >= 5 && currentHour < 12) greeting = "صباح الفرم والنشاط ☀️";
+            else if (currentHour >= 12 && currentHour < 18) greeting = "مسا الجمال والإنجاز ☕";
+            else greeting = "سهرة سعيدة مع النجاح 🦉";
+            
+            // بنعمل Check عشان منعدلش في الـ DOM غير لو الكلام اتغير فعلاً (لتحسين الأداء)
+            if (greetingElement.innerText !== greeting) {
+                greetingElement.innerText = greeting;
+            }
+        }
+
+        function startClock() {
+            updateClock();
+            clockInterval = setInterval(updateClock, 1000);
+        }
+
+        function stopClock() {
+            clearInterval(clockInterval);
+        }
+
+        // تشغيل الساعة بس لو الشاشة قدام عين المستخدم
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopClock();
+            else startClock();
+        });
+
+        startClock();
+
+        // مقولات تحفيزية
+        const quotes = [
+            "الانضباط هو الجسر بين أهدافك وإنجازاتها. استمر في البناء.",
+            "محدش هينجح مكانك، دوس يا بطل الكوكب مستنيك.",
+            "العرق في التدريب يوفر الدم في المعركة. افرم مناهجك وتمرينك.",
+            "الكسل مبيبنيش إمبراطوريات، انهض ونفذ مهامك.",
+            "النهارده إنت بتدفع الثمن، بكرة هتعيش كملك."
+        ];
+        document.getElementById('motivational-quote').innerText = '"' + quotes[Math.floor(Math.random() * quotes.length)] + '"';
+
+        // --- [ كود الداشبورد الجديد ] ---
+
+        // 1. نظام التنقل بين الشاشات (مع تكييش الـ DOM لتسريع الاستجابة)
+        const homeScreenEl = document.getElementById('home-screen');
+        const dashboardScreenEl = document.getElementById('dashboard-screen');
+        const navItemsList = document.querySelectorAll('.nav-item');
+
+        function switchTab(tabId, element) {
+            // إخفاء كل الشاشات باستخدام المتغيرات المخزنة بدل البحث في كل ضغطة
+            homeScreenEl.classList.replace('flex', 'hidden');
+            dashboardScreenEl.classList.replace('flex', 'hidden');
+
+            // ريست لستايل الزراير القياسية
+            navItemsList.forEach(n => {
+                n.classList.remove('active');
+            });
+
+            // إظهار الشاشة المطلوبة وتفعيل الزرار
+            const targetScreen = tabId === 'home' ? homeScreenEl : dashboardScreenEl;
+            targetScreen.classList.replace('hidden', 'flex');
+            
+            element.classList.add('active');
+
+            // لو فتح الداشبورد لأول مرة، حمل البيانات
+            if(tabId === 'dashboard' && !window.chartsRendered) {
+                loadDashboardData();
+            }
+        }
+
+        // 2. محاكاة جلب بيانات الإمبراطورية (كأنها جاية من الـ IndexedDB للـ 3 تطبيقات)
+        function loadDashboardData() {
+            setTimeout(() => {
+                // التأكد من تحميل مكتبة Chart.js قبل محاولة رسم البيانات لمنع الكراش
+                if (typeof Chart === 'undefined') {
+                    console.warn("مكتبة Chart.js لسه بتحمل، هنأجل الرسم شوية...");
+                    loadDashboardData(); // محاولة تانية
+                    return;
+                }
+
+                document.getElementById('dashboard-loader').classList.replace('flex', 'hidden');
+                document.getElementById('dashboard-content').classList.replace('hidden', 'flex');
+
+                // دي البيانات اللي هنبني عليها الإحصائيات
+                const data = {
+                    streak: 14, // عدد أيام الالتزام المتتالية
+                    discipline: 88, // نسبة الانضباط الأسبوعي
+                    topSystem: 'مصنع العضلات', // أكتر تطبيق عليه حركة
+                    weeklyPulse: [50, 65, 60, 80, 85, 75, 88], // أداء آخر 7 أيام
+                    distribution: [35, 45, 20] // التوزيع بين (مذاكرة، جيم، فلوس)
+                };
+
+                updateQuickStats(data);
+                renderCharts(data);
+                generateInsights(data);
+
+                window.chartsRendered = true; // عشان منرسمش تاني
+            }, 1200); // تأخير مقصود عشان يديك إحساس إن النظام بيحلل الداتا
+        }
+
+        // 3. تحديث الأرقام السريعة (مُحسنة: تكييش الـ DOM)
+        const statStreakEl = document.getElementById('stat-streak');
+        const statDisciplineEl = document.getElementById('stat-discipline');
+        const statTopEl = document.getElementById('stat-top');
+
+        function updateQuickStats(data) {
+            statStreakEl.innerText = data.streak;
+            statDisciplineEl.innerText = data.discipline + '%';
+            statTopEl.innerText = data.topSystem;
+        }
+
+        // متغيرات لتخزين نسخ الشارت عشان نمسحها لو هنعمل تحديث للداتا
+        let mainChartInstance = null;
+        let doughnutChartInstance = null;
+
+        // 4. رسم الـ Charts الاحترافية
+        function renderCharts(data) {
+            // إعدادات عامة للخطوط والألوان عشان تليق مع الدارك مود
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Cairo', sans-serif";
+
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { position: 'bottom', labels: { color: '#e2e8f0', font: { family: "'Cairo'", size: 10 } } }
+                },
+                animation: { duration: 1200, easing: 'easeOutQuart' },
+            };
+
+            // تدمير أي نسخة قديمة من الشارت عشان نمنع الـ Memory Leaks
+            if (mainChartInstance) mainChartInstance.destroy();
+            if (doughnutChartInstance) doughnutChartInstance.destroy();
+
+            // رسمة نبض الإمبراطورية (Line Chart)
+            const mainCtx = document.getElementById('mainChart').getContext('2d');
+            
+            // عمل Gradient للخط عشان يدي شكل نيون
+            const gradient = mainCtx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(14, 165, 233, 0.4)'); // سماوي شفاف
+            gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
+
+            mainChartInstance = new Chart(mainCtx, {
+                type: 'line',
+                data: {
+                    labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                    datasets: [{
+                        label: 'مؤشر الفرم (%)',
+                        data: data.weeklyPulse,
+                        borderColor: '#0ea5e9',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        tension: 0.4, // انحناء سلس
+                        fill: true,
+                        pointBackgroundColor: '#0ea5e9',
+                        pointBorderColor: '#fff',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    ...defaultOptions,
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { font: {size: 10} } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { font: {size: 10} }, beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+
+            // رسمة ميزان القوة (Doughnut Chart)
+            doughnutChartInstance = new Chart(document.getElementById('doughnutChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['أكاديمية الفرم', 'مصنع العضلات', 'الخزنة المركزية'],
+                    datasets: [{
+                        data: data.distribution,
+                        backgroundColor: ['#d946ef', '#0ea5e9', '#10b981'], // ألوان الإمبراطورية بتاعتك
+                        borderColor: '#1C1C1E',
+                        borderWidth: 3,
+                        hoverOffset: 5
+                    }]
+                },
+                options: defaultOptions
+            });
+        }
+
+        // 5. توليد الرسائل التحفيزية والتحليل الذكي (الـ Insights) (مُحسنة: DocumentFragment وتكييش الـ DOM)
+        const insightsContainerEl = document.getElementById('insights-container');
+
+        function generateInsights(data) {
+            insightsContainerEl.innerHTML = ''; // تنظيف القديم
+
+            // تعقيم اسم التطبيق لمنع ثغرات الـ XSS لو البيانات جاية من المستخدم
+            const safeTopSystem = String(data.topSystem).replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+
+            // لوجيك بسيط يطلع كلام بالمصري حسب الداتا
+            let streakMsg = data.streak > 7 
+                ? `🔥 <div class="alert-text"><strong>عاش يا وحش!</strong> إنت عامل ستريك ${data.streak} يوم ورا بعض، الاستمرارية دي هي اللي بتعمل معجزات.</div>`
+                : `🔥 <div class="alert-text"><strong>شد حيلك يا بطل!</strong> عندك ${data.streak} أيام التزام، عايزين نقفل الأسبوع الجاي بالكامل.</div>`;
+
+            let performanceMsg = data.discipline >= 80 
+                ? `📈 <div class="alert-text"><strong>أداؤك دمار الأسبوع ده:</strong> مؤشر الانضباط ضرب ${data.discipline}%، كمل على نفس الرتم الكوكب مستنيك!</div>`
+                : `📈 <div class="alert-text"><strong>محتاجين زقة:</strong> مؤشر الانضباط ${data.discipline}%، عارف إنك تقدر تجيب رقم أعلى من ده بكرة.</div>`;
+
+            let balanceMsg = `⚖️ <div class="alert-text"><strong>الرادار بيقول:</strong> إن معظم مجهودك الأيام دي رايح لـ "${safeTopSystem}"، دوس براحتك بس متنساش تظبط باقي أركان إمبراطوريتك.</div>`;
+
+            const insights = [streakMsg, performanceMsg, balanceMsg];
+            const fragment = document.createDocumentFragment();
+
+            // تحويل الجمل لـ HTML ورميها في الـ Fragment الأول (في الميموري مش في الشاشة)
+            insights.forEach((text, index) => {
+                const div = document.createElement('div');
+                // استخدام الـ Alert Banner من نظام التصميم الجديد
+                div.className = 'alert info';
+                div.style.animationDelay = `${index * 0.2}s`;
+                div.innerHTML = text;
+                fragment.appendChild(div);
+            });
+            
+            // إضافة كل العناصر للـ DOM خبطة واحدة
+            insightsContainerEl.appendChild(fragment);
+        }
+
+        // ==========================================
+        // 🚀 تسجيل الـ Service Worker للـ PWA
+        // ==========================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('./sw.js');
+                    console.log('✅ السيرفيس وركر شغال زي الفل يا إمبراطور! النطاق:', registration.scope);
+                } catch (error) {
+                    console.error('❌ في مشكلة في تشغيل السيرفيس وركر:', error);
+                }
+            });
+        }
+    </script>
+</body>
 </html>
